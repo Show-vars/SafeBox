@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="167.0" prefWidth="458.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <ToolBar prefHeight="40.0" prefWidth="200.0">
+            <Label prefHeight="27.0" prefWidth="108.0" text="SafeBox">
+                <font>
+                    <Font name="System Bold" size="28.0" />
+                </font>
+            </Label>
+            <Label text="Select database">
+                <padding>
+                    <Insets left="10.0" />
+                </padding>
+            </Label>
+        </ToolBar>
+        <GridPane hgap="10.0" vgap="10.0" VBox.vgrow="ALWAYS">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.0" minWidth="10.0" prefWidth="96.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="277.0" minWidth="10.0" prefWidth="273.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="69.0" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="64.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <children>
+                <Label text="Database file:" />
+                <Label text="Master key file:" GridPane.rowIndex="1" />
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                    <children>
+                        <ComboBox HBox.hgrow="ALWAYS" fx:id="dbField" editable="true" />
+                        <Button mnemonicParsing="false" text="..." fx:id="dbSelectButton"/>
+                    </children>
+                </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <children>
+                        <ComboBox HBox.hgrow="ALWAYS" fx:id="keyField" editable="true"/>
+                        <Button mnemonicParsing="false" text="..." fx:id="keySelectButton"/>
+                    </children>
+                </HBox>
+            </children>
+            <VBox.margin>
+                <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+            </VBox.margin>
+        </GridPane>
+        <ToolBar prefHeight="25.0" prefWidth="458.0">
+            <Hyperlink text="Create new" fx:id="newButton"/>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button defaultButton="true" mnemonicParsing="false" text="Open" fx:id="openButton"/>
+            <Button cancelButton="true" mnemonicParsing="false" text="Cancel" fx:id="cancelButton"/>
+        </ToolBar>
+    </children>
+</VBox>

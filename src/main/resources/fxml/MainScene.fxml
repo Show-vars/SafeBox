@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox  xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.51" fx:controller="ru.iostd.safebox.controllers.MainController">
+    <ToolBar prefHeight="40.0" prefWidth="640.0">
+        <TextField fx:id="searchField" promptText="Search..." />
+        <Pane HBox.hgrow="ALWAYS" />
+        <Button mnemonicParsing="false" text="Save and Exit" onAction="#handleSaveButton"/>
+    </ToolBar>
+    <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+        <TableView fx:id="dataTable">
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+            <columns>
+                <TableColumn prefWidth="150.0" text="Title" fx:id="columnTitle"/>
+                <TableColumn prefWidth="75.0" text="User Name" fx:id="columnUsername"/>
+                <TableColumn prefWidth="75.0" text="Password" fx:id="columnPassword"/>
+                <TableColumn prefWidth="75.0" text="URL" fx:id="columnURL"/>
+                <TableColumn prefWidth="75.0" text="Notes" fx:id="columnNotes"/>
+            </columns>
+        </TableView>
+    </ScrollPane>
+</VBox>
