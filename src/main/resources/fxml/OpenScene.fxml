@@ -33,15 +33,15 @@
                 <Insets />
             </opaqueInsets>
             <children>
-                <Label text="Database file:" />
+                <Label text="Database file:" GridPane.rowIndex="0" />
                 <Label text="Master key file:" GridPane.rowIndex="1" />
-                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="1">
                     <children>
                         <ComboBox HBox.hgrow="ALWAYS" fx:id="dbField" editable="true" />
                         <Button mnemonicParsing="false" text="..." fx:id="dbSelectButton"/>
                     </children>
                 </HBox>
-                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1" GridPane.columnIndex="1" >
                     <children>
                         <ComboBox HBox.hgrow="ALWAYS" fx:id="keyField" editable="true"/>
                         <Button mnemonicParsing="false" text="..." fx:id="keySelectButton"/>

@@ -95,6 +95,8 @@ public class MainApp extends Application {
             Stage surveyStage = new Stage();
             surveyStage.initOwner(stage);
             surveyStage.setResizable(false);
+            surveyStage.setTitle("Creating");
+            surveyStage.getIcons().add(new Image(getClass().getResourceAsStream("/media/SafeBoxLogo.png")));
             surveyStage.initModality(Modality.APPLICATION_MODAL);
             CreateSurvey survey = new CreateSurvey(data, surveyStage);
             survey.start();
@@ -242,7 +244,7 @@ public class MainApp extends Application {
                 stage.close();
                 MainApp.exit();
             }
-
+            we.consume();
         });
         stage.show();
     }

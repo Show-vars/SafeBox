@@ -1,7 +1,6 @@
 package ru.iostd.safebox.controllers;
 
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
@@ -12,8 +11,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Timer;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -46,8 +43,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javax.crypto.NoSuchPaddingException;
 import ru.iostd.safebox.exceptions.InvalidFileFormatException;
@@ -55,10 +52,12 @@ import ru.iostd.safebox.MainApp;
 import ru.iostd.safebox.data.SafeDataManager;
 import ru.iostd.safebox.data.SafeRecord;
 import ru.iostd.safebox.exceptions.BadMasterKeyException;
+import ru.iostd.safebox.wizard.importdata.ImportSurvey;
+import ru.iostd.safebox.wizard.importdata.ImportSurveyData;
 
 public class MainController implements Initializable {
 
-    private ObservableList<SafeRecord> observableList = FXCollections.observableList(SafeDataManager.getInstance().getData().getRecords());
+    private final ObservableList<SafeRecord> observableList = FXCollections.observableList(SafeDataManager.getInstance().getData().getRecords());
     private Stage primaryStage;
 
     @FXML
@@ -90,6 +89,25 @@ public class MainController implements Initializable {
         }
     }
 
+    @FXML
+    private void handleImportButton(ActionEvent event) {
+        try {
+            ImportSurveyData data = new ImportSurveyData();
+            data.observableList = observableList;
+            Stage surveyStage = new Stage();
+            surveyStage.setTitle("Importing");
+            surveyStage.initOwner(primaryStage);
+            surveyStage.setResizable(false);
+            surveyStage.getIcons().add(new Image(getClass().getResourceAsStream("/media/SafeBoxLogo.png")));
+            surveyStage.initModality(Modality.APPLICATION_MODAL);
+            ImportSurvey survey = new ImportSurvey(data, surveyStage);
+            survey.start();
+
+        } catch (Exception ex) {
+            MainApp.showException(primaryStage, ex);
+        }
+    }
+
     public void handleDiscardButton(ActionEvent event) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
@@ -101,9 +119,7 @@ public class MainController implements Initializable {
             try {
                 SafeDataManager.getInstance().load();
 
-            } catch (IOException | InvalidFileFormatException | NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException ex) {
-                MainApp.showException(primaryStage, ex);
-            } catch (BadMasterKeyException ex) {
+            } catch (IOException | InvalidFileFormatException | NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | BadMasterKeyException ex) {
                 MainApp.showException(primaryStage, ex);
             }
         }
@@ -225,7 +241,7 @@ public class MainController implements Initializable {
             }
         });
         t.setRepeats(false);
-        
+
         dataTable.setRowFactory(tv -> {
             TableRow<SafeRecord> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -264,6 +280,7 @@ public class MainController implements Initializable {
         PasswordField passwordField = new PasswordField();
         TextField urlFiled = new TextField();
         TextArea notesFeild = new TextArea();
+        notesFeild.setWrapText(true);
 
         if (safeRecord != null) {
             titleField.setText(safeRecord.getTitle());

@@ -1,11 +1,18 @@
-package ru.iostd.safebox.wizard.createnew;
+package ru.iostd.safebox.wizard.importdata;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+import ru.iostd.safebox.wizard.createnew.*;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.time.LocalDateTime;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -17,8 +24,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.crypto.NoSuchPaddingException;
 import ru.iostd.safebox.data.SafeDataManager;
+import ru.iostd.safebox.data.SafeRecord;
 import ru.iostd.safebox.exceptions.InvalidFileFormatException;
 import ru.iostd.safebox.wizard.WizardPage;
+import ru.iostd.safebox.wizard.importdata.formats.JsonFormat;
+import ru.iostd.safebox.wizard.importdata.formats.JsonPassword;
 
 public class ProcessPage extends WizardPage {
 
@@ -27,7 +37,7 @@ public class ProcessPage extends WizardPage {
     private Task<Boolean> worker;
 
     public ProcessPage() {
-        super("Creating");
+        super("Importing");
 
     }
 
@@ -35,7 +45,7 @@ public class ProcessPage extends WizardPage {
     public Parent getContent() {
         VBox vbox = new VBox();
         bar = new ProgressBar();
-        label = new Label("Creating...");
+        label = new Label("Importing...");
         vbox.setSpacing(5);
         vbox.getChildren().addAll(label, bar);
         HBox.setHgrow(bar, Priority.ALWAYS);
@@ -50,7 +60,7 @@ public class ProcessPage extends WizardPage {
         worker.setOnSucceeded((WorkerStateEvent event) -> {
             cancelButton.setDisable(true);
             if (worker.getValue() == true) {
-                
+
                 nextButton.setDisable(false);
             }
         });
@@ -64,22 +74,21 @@ public class ProcessPage extends WizardPage {
             protected Object call() {
                 try {
                     //updateProgress(0, 10);
-                    File keyFile = new File(((CreateSurveyData) data).keyPath);
-                    File dbFile = new File(((CreateSurveyData) data).dbPath);
+                    File file = new File(((ImportSurveyData) data).path);
 
-                    SafeDataManager.getInstance().setFiles(dbFile, keyFile);
+                    Gson gson = new Gson();
 
-                    if (!((CreateSurveyData) data).existingKey) {
+                    JsonFormat format = gson.fromJson(new FileReader(file), JsonFormat.class);
 
-                        updateMessage("Generating master key file");
-                        SafeDataManager.getInstance().newMasterKey();
+                    format.getPasswords().stream().forEach((p) -> {
+                        ((ImportSurveyData) data).observableList.add(
+                                new SafeRecord(p.getTitle(), p.getUserName(), p.getPassword(), "", p.getNotes(), LocalDateTime.now())
+                        );
+                    });
 
-                    }
-                    updateMessage("Creating database file");
-                    SafeDataManager.getInstance().newDatabase();
                     updateMessage("Done");
                     updateProgress(10, 10);
-                } catch (IOException | InvalidFileFormatException | NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException ex) {
+                } catch (FileNotFoundException | JsonSyntaxException | JsonIOException ex) {
                     updateMessage("Failed");
                     updateProgress(0, 10);
                     return false;

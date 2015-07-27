@@ -13,6 +13,7 @@
     <ToolBar prefHeight="40.0" prefWidth="640.0">
         <TextField fx:id="searchField" promptText="Search..." />
         <Pane HBox.hgrow="ALWAYS" />
+        <Button mnemonicParsing="false" text="Import" onAction="#handleImportButton"/>
         <Button mnemonicParsing="false" text="Save and Exit" onAction="#handleSaveButton"/>
     </ToolBar>
     <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
